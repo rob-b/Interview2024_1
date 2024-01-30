@@ -1,0 +1,20 @@
+{
+  "name": "Interview exercise",
+  "version": "1.0.0",
+  "description": "0. Clone this git repository     * In your profile > settings > SSH Keys confirm you have set up an SSH Key for Github. If not, then set up SSH access to github. [Connecting to GitHub with SSH](https://help.github.com/enterprise/2.6/user/articles/connecting-to-github-with-ssh/)",
+  "main": "index.js",
+  "dependencies": {
+    "jest": "^29.2.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "ts-jest": "^29.0.5",
+    "typescript": "^5.0.3"
+  },
+  "scripts": {
+    "test": "jest --verbose",
+    "tdd": "jest --verbose --watch --onlyChanged"
+  },
+  "keywords": [],
+  "author": ""
+}
