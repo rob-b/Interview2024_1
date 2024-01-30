@@ -10,21 +10,48 @@ export class Item {
   }
 }
 
+const constrainQuality = (x: number) => {
+  // TODO: make the upper and lower bounds into parameters
+  if (x < 0) {
+    x = 0
+  } else if (x > 50) {
+    x = 50
+  }
+  return x
+}
+
 const increaseQuality = (item: Item) => {
   return item.quality += 1
 }
 
 
-const maintainQuality = (item : Item) => {
+const maintainQuality = (item: Item) => {
   return item.quality
 }
 
 
 type SUPPORTED = Record<string, (a: any) => any>
 
+
+const backstage = (item: Item) => {
+
+  // 10 days
+  if (item.sellIn < 11) {
+      return item.quality + 2
+  }
+
+  // 5 days
+  if (item.sellIn < 6) {
+      return item.quality + 3
+  }
+  if (item.sellIn < 1) {
+    return 0
+  }
+}
+
 const SUPPORTED_ITEMS: SUPPORTED = {
   "Aged Brie": increaseQuality,
-  "Backstage passes to a TAFKAL80ETC concert": increaseQuality,
+  "Backstage passes to a TAFKAL80ETC concert": backstage,
   "Sulfuras, Hand of Ragnaros": maintainQuality
 }
 
@@ -32,7 +59,9 @@ const defaultQuality = (item: Item) => {
   return item.quality - 1
 }
 
-const qualityOfUnknownItem = (item: Item): undefined | number => {
+
+
+const qualityOfUnknownItem = (item: Item): number => {
 
   let fn = SUPPORTED_ITEMS[item.name]
 
@@ -54,30 +83,7 @@ export class GildedRose {
     for (let i = 0; i < this.items.length; i++) {
 
       let item = this.items[i]
-      let quality = qualityOfUnknownItem(item)
-
-      if (typeof (quality) === "number") {
-        item.quality = quality
-
-        // FIXME: use item everywhere
-        this.items[i] = item
-      } else {
-        if (this.items[i].quality < 50) {
-          this.items[i].quality = this.items[i].quality + 1
-          if (this.items[i].name == 'Backstage passes to a TAFKAL80ETC concert') {
-            if (this.items[i].sellIn < 11) {
-              if (this.items[i].quality < 50) {
-                this.items[i].quality = this.items[i].quality + 1
-              }
-            }
-            if (this.items[i].sellIn < 6) {
-              if (this.items[i].quality < 50) {
-                this.items[i].quality = this.items[i].quality + 1
-              }
-            }
-          }
-        }
-      }
+      item.quality = qualityOfUnknownItem(item)
 
       if (this.items[i].name != 'Sulfuras, Hand of Ragnaros') {
         this.items[i].sellIn = this.items[i].sellIn - 1;
@@ -99,6 +105,8 @@ export class GildedRose {
           }
         }
       }
+
+      this.items[i].quality = constrainQuality(item.quality)
     }
 
     return this.items;
